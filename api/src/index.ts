@@ -1,0 +1,42 @@
+import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+import { health } from './routes/health.js';
+import { users } from './routes/users.js';
+import { encounters } from './routes/encounters.js';
+import { agreements } from './routes/agreements.js';
+import { silentRejects } from './routes/silent-rejects.js';
+
+const app = new Hono();
+
+app.use('*', logger());
+app.use(
+  '*',
+  cors({
+    origin: (origin) => origin ?? '*',
+    allowHeaders: ['Content-Type', 'X-User-Id'],
+    allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  }),
+);
+
+app.route('/health', health);
+app.route('/api/users', users);
+app.route('/api/encounters', encounters);
+app.route('/api/agreements', agreements);
+app.route('/api/silent-rejects', silentRejects);
+
+app.onError((err, c) => {
+  console.error('[api] error:', err);
+  if (err.name === 'ZodError') {
+    return c.json({ error: 'validation_failed', detail: err.message }, 400);
+  }
+  return c.json({ error: 'internal_error', message: err.message }, 500);
+});
+
+const port = Number(process.env.PORT ?? 8787);
+
+serve({ fetch: app.fetch, port }, (info) => {
+  console.log(`[api] listening on http://localhost:${info.port}`);
+});
