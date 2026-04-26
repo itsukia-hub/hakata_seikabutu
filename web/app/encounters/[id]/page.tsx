@@ -12,6 +12,11 @@ import {
 } from '@/lib/api';
 import { subscribeAgreementStream } from '@/lib/sse';
 import { clearUserId, getUserId } from '@/lib/session';
+import {
+  AGE_RANGE_LABEL,
+  CHRONOTYPE_LABEL,
+  RELATIONSHIP_LABEL,
+} from '@/lib/labels';
 
 export default function EncounterDetailPage() {
   const params = useParams<{ id: string }>();
@@ -157,10 +162,56 @@ export default function EncounterDetailPage() {
 
       {(stage === 'Lv2' || stage === 'Lv3') && encounter.partner.profileSummary && (
         <section className="rounded-lg border border-ink-mute/20 bg-paper-card p-5">
-          <p className="text-xs text-ink-mute">自己紹介</p>
+          <p className="text-xs tracking-wider text-ink-mute">自己紹介</p>
           <p className="mt-2 text-base leading-relaxed text-ink">
             {encounter.partner.profileSummary}
           </p>
+        </section>
+      )}
+
+      {/* Lv.2 公的プロフィール項目 */}
+      {(stage === 'Lv2' || stage === 'Lv3') && encounter.partner.profileExtras && (
+        <section className="mt-4 grid grid-cols-2 gap-3">
+          {encounter.partner.profileExtras.ageRange && (
+            <div className="rounded-lg border border-ink-mute/15 bg-paper-card p-3">
+              <p className="text-[10px] tracking-widest text-ink-mute">年代</p>
+              <p className="mt-1 text-sm text-ink">
+                {AGE_RANGE_LABEL[encounter.partner.profileExtras.ageRange] ?? '—'}
+              </p>
+            </div>
+          )}
+          {encounter.partner.profileExtras.relationshipIntent && (
+            <div className="rounded-lg border border-ink-mute/15 bg-paper-card p-3">
+              <p className="text-[10px] tracking-widest text-ink-mute">求める関係</p>
+              <p className="mt-1 text-sm text-ink">
+                {RELATIONSHIP_LABEL[encounter.partner.profileExtras.relationshipIntent] ?? '—'}
+              </p>
+            </div>
+          )}
+          {encounter.partner.profileExtras.chronotype && (
+            <div className="rounded-lg border border-ink-mute/15 bg-paper-card p-3">
+              <p className="text-[10px] tracking-widest text-ink-mute">朝型 / 夜型</p>
+              <p className="mt-1 text-sm text-ink">
+                {CHRONOTYPE_LABEL[encounter.partner.profileExtras.chronotype] ?? '—'}
+              </p>
+            </div>
+          )}
+          {encounter.partner.profileExtras.hobbies &&
+            encounter.partner.profileExtras.hobbies.length > 0 && (
+              <div className="col-span-2 rounded-lg border border-ink-mute/15 bg-paper-card p-3">
+                <p className="text-[10px] tracking-widest text-ink-mute">興味・趣味</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {encounter.partner.profileExtras.hobbies.map((h) => (
+                    <span
+                      key={h}
+                      className="rounded-full border border-ink-mute/30 bg-paper px-2 py-0.5 text-xs text-ink-soft"
+                    >
+                      {h}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
         </section>
       )}
 
@@ -172,12 +223,37 @@ export default function EncounterDetailPage() {
             : 'max-h-0 border-transparent p-0 opacity-0'
         } ${justUnlocked ? 'animate-pulse' : ''}`}
       >
-        {unlocked && encounter.partner.profileDetail && (
+        {unlocked && (
           <>
             <p className="text-xs tracking-widest text-accent">UNLOCKED ✦ 詳細プロフィール</p>
-            <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink">
-              {encounter.partner.profileDetail}
-            </p>
+            {encounter.partner.profileExtras?.question1 && (
+              <div className="mt-4">
+                <p className="text-[10px] tracking-widest text-ink-mute">
+                  合意したら、最初に話したいこと
+                </p>
+                <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                  {encounter.partner.profileExtras.question1}
+                </p>
+              </div>
+            )}
+            {encounter.partner.profileExtras?.question2 && (
+              <div className="mt-3">
+                <p className="text-[10px] tracking-widest text-ink-mute">
+                  最近、心が動いた瞬間
+                </p>
+                <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                  {encounter.partner.profileExtras.question2}
+                </p>
+              </div>
+            )}
+            {encounter.partner.profileDetail && (
+              <div className="mt-4 border-t border-ink-mute/10 pt-3">
+                <p className="text-[10px] tracking-widest text-ink-mute">プロフィール</p>
+                <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                  {encounter.partner.profileDetail}
+                </p>
+              </div>
+            )}
           </>
         )}
       </section>

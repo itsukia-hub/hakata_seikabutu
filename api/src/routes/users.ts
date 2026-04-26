@@ -5,24 +5,40 @@ import { requireUser } from '../lib/auth.js';
 
 export const users = new Hono();
 
+const profileExtrasSchema = z
+  .object({
+    ageRange: z.enum(['20s_early', '20s_late', '30s_early', '30s_late', 'other']).optional(),
+    relationshipIntent: z
+      .enum(['friend', 'slow', 'romance', 'marriage', 'undecided'])
+      .optional(),
+    chronotype: z.enum(['morning', 'day', 'night']).optional(),
+    hobbies: z.array(z.string().max(40)).max(20).optional(),
+    question1: z.string().max(500).optional(),
+    question2: z.string().max(500).optional(),
+  })
+  .strict()
+  .optional();
+
 const createSchema = z.object({
   nickname: z.string().min(1).max(40),
   iconUrl: z.string().url().nullable().optional(),
   profileSummary: z.string().max(200).nullable().optional(),
   profileDetail: z.string().max(2000).nullable().optional(),
+  profileExtras: profileExtrasSchema,
 });
 
 users.post('/', async (c) => {
   const body = createSchema.parse(await c.req.json());
   const rows = await query<{ id: string; nickname: string; created_at: string }>(
-    `INSERT INTO users (nickname, icon_url, profile_summary, profile_detail)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO users (nickname, icon_url, profile_summary, profile_detail, profile_extras)
+     VALUES ($1, $2, $3, $4, $5::jsonb)
      RETURNING id, nickname, created_at`,
     [
       body.nickname,
       body.iconUrl ?? null,
       body.profileSummary ?? null,
       body.profileDetail ?? null,
+      JSON.stringify(body.profileExtras ?? {}),
     ],
   );
   return c.json(rows[0], 201);
@@ -38,8 +54,9 @@ users.get('/me', requireUser, async (c) => {
     profile_detail: string | null;
     home_lat: string | null;
     home_lng: string | null;
+    profile_extras: unknown;
   }>(
-    `SELECT id, nickname, icon_url, profile_summary, profile_detail, home_lat, home_lng
+    `SELECT id, nickname, icon_url, profile_summary, profile_detail, home_lat, home_lng, profile_extras
      FROM users WHERE id = $1`,
     [userId],
   );

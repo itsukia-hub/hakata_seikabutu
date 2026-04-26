@@ -162,6 +162,7 @@ encounters.get('/', requireUser, async (c) => {
     icon_url: string | null;
     profile_summary: string | null;
     profile_detail: string | null;
+    profile_extras: unknown;
     user_a_agreed_at: string | null;
     user_b_agreed_at: string | null;
     unlocked_at: string | null;
@@ -173,7 +174,7 @@ encounters.get('/', requireUser, async (c) => {
        e.count,
        e.last_encountered_at,
        CASE WHEN e.user_a_id = $1 THEN e.user_b_id ELSE e.user_a_id END AS partner_id,
-       u.nickname, u.icon_url, u.profile_summary, u.profile_detail,
+       u.nickname, u.icon_url, u.profile_summary, u.profile_detail, u.profile_extras,
        a.user_a_agreed_at, a.user_b_agreed_at, a.unlocked_at, a.expired_at,
        (e.user_a_id = $1) AS is_user_a
      FROM encounters e
@@ -198,6 +199,7 @@ encounters.get('/', requireUser, async (c) => {
       iconUrl: r.icon_url,
       profileSummary: r.profile_summary,
       profileDetail: r.profile_detail,
+      profileExtras: (r.profile_extras as UserPublic['profileExtras']) ?? null,
     };
     const myAgreedAt = r.is_user_a ? r.user_a_agreed_at : r.user_b_agreed_at;
     const partnerAgreedAt = r.is_user_a ? r.user_b_agreed_at : r.user_a_agreed_at;

@@ -10,7 +10,8 @@
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d postgres && sleep 3 && npm run db:migrate",
-    "db:migrate": "docker compose exec -T postgres psql -U app -d surechigai -f /migrations/0001_init.sql",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:seed": "bash scripts/seed.local.sh",
     "dev:api": "npm run dev --workspace=api",
     "dev:web": "npm run dev --workspace=web"
   }

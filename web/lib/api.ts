@@ -36,11 +36,25 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
   return res.json() as Promise<T>;
 }
 
+export type AgeRange = '20s_early' | '20s_late' | '30s_early' | '30s_late' | 'other';
+export type RelationshipIntent = 'friend' | 'slow' | 'romance' | 'marriage' | 'undecided';
+export type Chronotype = 'morning' | 'day' | 'night';
+
+export interface ProfileExtras {
+  ageRange?: AgeRange;
+  relationshipIntent?: RelationshipIntent;
+  chronotype?: Chronotype;
+  hobbies?: string[];
+  question1?: string;
+  question2?: string;
+}
+
 export interface CreateUserInput {
   nickname: string;
   iconUrl?: string | null;
   profileSummary?: string | null;
   profileDetail?: string | null;
+  profileExtras?: ProfileExtras;
 }
 
 export function createUser(input: CreateUserInput) {
@@ -83,6 +97,7 @@ export interface PartnerCard {
   iconUrlBlurred?: string | null;
   profileSummary?: string | null;
   profileDetail?: string | null;
+  profileExtras?: ProfileExtras | null;
 }
 
 export interface AgreementState {

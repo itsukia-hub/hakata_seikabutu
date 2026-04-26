@@ -12,12 +12,37 @@ export function calcStage({ count, unlocked }: StageInput): Stage {
   return 'Lv0';
 }
 
+export interface ProfileExtras {
+  ageRange?: string;
+  relationshipIntent?: string;
+  chronotype?: string;
+  hobbies?: string[];
+  question1?: string;
+  question2?: string;
+}
+
 export interface UserPublic {
   id: string;
   nickname: string;
   iconUrl: string | null;
   profileSummary: string | null;
   profileDetail: string | null;
+  profileExtras: ProfileExtras | null;
+}
+
+function publicExtras(e: ProfileExtras | null) {
+  if (!e) return null;
+  return {
+    ageRange: e.ageRange,
+    relationshipIntent: e.relationshipIntent,
+    chronotype: e.chronotype,
+    hobbies: e.hobbies,
+  };
+}
+
+function fullExtras(e: ProfileExtras | null) {
+  if (!e) return null;
+  return e;
 }
 
 export function filterByStage(stage: Stage, user: UserPublic) {
@@ -38,6 +63,7 @@ export function filterByStage(stage: Stage, user: UserPublic) {
         nickname: user.nickname,
         iconUrl: user.iconUrl,
         profileSummary: user.profileSummary,
+        profileExtras: publicExtras(user.profileExtras),
       };
     case 'Lv3':
       return {
@@ -47,6 +73,7 @@ export function filterByStage(stage: Stage, user: UserPublic) {
         iconUrl: user.iconUrl,
         profileSummary: user.profileSummary,
         profileDetail: user.profileDetail,
+        profileExtras: fullExtras(user.profileExtras),
       };
   }
 }
