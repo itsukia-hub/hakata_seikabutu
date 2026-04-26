@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ApiError, getEncounters, getMe, type EncounterCard, type MeResponse } from '@/lib/api';
 import { subscribeAgreementStream } from '@/lib/sse';
 import { clearUserId, getUserId } from '@/lib/session';
+import { formatRelative } from '@/lib/relative-time';
 import StageGlyph from '@/components/StageGlyph';
 
 const STAGE_LABEL: Record<string, string> = {
@@ -197,6 +198,9 @@ export default function EncountersPage() {
                       </p>
                       <p className="mt-1 text-[10px] tracking-widest text-ink-mute">
                         TIMES
+                      </p>
+                      <p className="mt-2 text-[10px] text-ink-mute">
+                        {formatRelative(e.lastEncounteredAt)}
                       </p>
                     </div>
                   </div>
