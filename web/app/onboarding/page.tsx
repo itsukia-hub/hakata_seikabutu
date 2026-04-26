@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   createUser,
@@ -15,6 +15,8 @@ import {
   RELATIONSHIP_OPTIONS,
 } from '@/lib/labels';
 
+const IS_DEV = process.env.NODE_ENV !== 'production';
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
@@ -28,6 +30,21 @@ export default function OnboardingPage() {
   const [hobbies, setHobbies] = useState('');
   const [q1, setQ1] = useState('');
   const [q2, setQ2] = useState('');
+
+  // 開発モード時のみフォーム初期値をプリフィル（hydration後）
+  useEffect(() => {
+    if (!IS_DEV) return;
+    const suffix = Math.random().toString(36).slice(2, 5);
+    setNickname((v) => v || `dev_${suffix}`);
+    setSummary((v) => v || '朝、同じカフェに通っています');
+    setDetail((v) => v || '本と植物が好き。週末は近所を散歩して1日が終わります。最近は北欧文学が気になっていて、静かなカフェで少しずつ読み進めています。');
+    setAgeRange((v) => v || '20s_late');
+    setRelationshipIntent((v) => v || 'slow');
+    setChronotype((v) => v || 'morning');
+    setHobbies((v) => v || '読書, カフェ巡り, 植物');
+    setQ1((v) => v || 'いつも同じカフェにいらっしゃいますね、行きつけはありますか？');
+    setQ2((v) => v || '書店で偶然手にとった本の最初の一文が、ふいに良かったとき');
+  }, []);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
