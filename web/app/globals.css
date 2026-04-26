@@ -1,3 +1,5 @@
+@import 'leaflet/dist/leaflet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +12,125 @@ body {
 
 body {
   min-height: 100dvh;
+}
+
+/* breathing - ランディング・解放演出用 */
+@keyframes breathe {
+  0%, 100% {
+    transform: translate(var(--tx, -50%), -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(var(--tx, -50%), -50%) scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+@keyframes drift-left {
+  0%, 100% { transform: translate(-60%, -50%); }
+  50% { transform: translate(-65%, -50%); }
+}
+
+@keyframes drift-right {
+  0%, 100% { transform: translate(-40%, -50%); }
+  50% { transform: translate(-35%, -50%); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(107, 122, 143, 0); }
+  50% { box-shadow: 0 0 24px 6px rgba(107, 122, 143, 0.25); }
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-breathe-left {
+  animation: drift-left 4s ease-in-out infinite;
+}
+
+.animate-breathe-right {
+  animation: drift-right 4s ease-in-out infinite 1s;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-up-delay-1 { animation-delay: 0.1s; }
+.animate-fade-up-delay-2 { animation-delay: 0.25s; }
+.animate-fade-up-delay-3 { animation-delay: 0.4s; }
+.animate-fade-up-delay-4 { animation-delay: 0.6s; }
+
+.animate-glow {
+  animation: glow 2.5s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(107, 122, 143, 0.15) 50%,
+    transparent 100%
+  );
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Leaflet 調整 - 静寂トーンに合わせる */
+.leaflet-container {
+  background: theme('colors.paper.DEFAULT') !important;
+  font-family: inherit;
+}
+
+.leaflet-control-attribution {
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.leaflet-control-zoom a {
+  border-radius: 6px !important;
+  border: 1px solid theme('colors.ink.mute') !important;
+  background: theme('colors.paper.card') !important;
+  color: theme('colors.ink.soft') !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe-left,
+  .animate-breathe-right,
+  .animate-fade-up,
+  .animate-glow,
+  .animate-shimmer::after {
+    animation: none !important;
+  }
 }

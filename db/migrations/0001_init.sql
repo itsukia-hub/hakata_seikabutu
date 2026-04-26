@@ -1,4 +1,4 @@
--- すれ違いマッチング 初期スキーマ
+-- Meguriai 初期スキーマ
 -- 実装計画 v1 §4 データモデル準拠
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

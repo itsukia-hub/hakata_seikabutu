@@ -5,12 +5,13 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   agreeOnEncounter,
+  ApiError,
   getEncounters,
   silentReject,
   type EncounterCard,
 } from '@/lib/api';
 import { subscribeAgreementStream } from '@/lib/sse';
-import { getUserId } from '@/lib/session';
+import { clearUserId, getUserId } from '@/lib/session';
 
 export default function EncounterDetailPage() {
   const params = useParams<{ id: string }>();
@@ -30,9 +31,14 @@ export default function EncounterDetailPage() {
       const found = encounters.find((e) => e.encounterId === encounterId);
       setEncounter(found ?? null);
     } catch (err) {
+      if (err instanceof ApiError && (err.status === 401 || err.status === 404)) {
+        clearUserId();
+        router.replace('/');
+        return;
+      }
       setError((err as Error).message);
     }
-  }, [encounterId]);
+  }, [encounterId, router]);
 
   useEffect(() => {
     if (!getUserId()) {

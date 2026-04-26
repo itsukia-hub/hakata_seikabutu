@@ -34,61 +34,82 @@ export default function OnboardingPage() {
 
   return (
     <main className="flex flex-1 flex-col py-8">
-      <header className="mb-10">
+      <header className="mb-8">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="h-1 flex-1 rounded-full bg-ink" />
+          <span className="h-1 flex-1 rounded-full bg-ink-mute/30" />
+        </div>
         <p className="text-xs tracking-widest text-ink-mute">STEP 1 / 2</p>
-        <h1 className="mt-2 text-2xl font-medium text-ink">あなたの呼び名</h1>
+        <h1 className="mt-2 text-2xl font-medium tracking-tight text-ink">
+          あなたの呼び名
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-          実名は要りません。相手に最初に見えるのはこの呼び名だけです。
+          実名は要りません。
+          <br />
+          相手に最初に見えるのは、この呼び名だけです。
         </p>
       </header>
 
-      <form onSubmit={onSubmit} className="flex flex-1 flex-col gap-6">
+      <form onSubmit={onSubmit} className="flex flex-1 flex-col gap-5">
         <label className="block">
-          <span className="text-sm text-ink-soft">ニックネーム</span>
+          <span className="text-xs tracking-wider text-ink-mute">NICKNAME</span>
           <input
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             maxLength={40}
             required
-            className="mt-2 w-full rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none focus:border-accent"
-            placeholder="例: しずか"
+            className="mt-2 w-full rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+            placeholder="しずか / そら / もり ..."
           />
         </label>
 
         <label className="block">
-          <span className="text-sm text-ink-soft">短い自己紹介（Lv.2 で表示）</span>
+          <span className="text-xs tracking-wider text-ink-mute">
+            自己紹介（Lv.2 で開示）
+          </span>
           <input
             type="text"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             maxLength={200}
-            className="mt-2 w-full rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none focus:border-accent"
-            placeholder="例: 朝、同じカフェにいることが多いです"
+            className="mt-2 w-full rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+            placeholder="朝、同じカフェにいることが多いです"
           />
         </label>
 
         <label className="block">
-          <span className="text-sm text-ink-soft">詳しいプロフィール（Lv.3 / 双方合意で表示）</span>
+          <span className="text-xs tracking-wider text-ink-mute">
+            詳しいプロフィール（Lv.3 / 双方合意で開示）
+          </span>
           <textarea
             value={detail}
             onChange={(e) => setDetail(e.target.value)}
             maxLength={2000}
             rows={4}
-            className="mt-2 w-full resize-none rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none focus:border-accent"
-            placeholder="趣味、よくいる場所、好きな本など"
+            className="mt-2 w-full resize-none rounded-lg border border-ink-mute/30 bg-paper-card px-4 py-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+            placeholder="趣味、よくいる場所、好きな本、価値観 ..."
           />
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        )}
 
-        <button
-          type="submit"
-          disabled={submitting || !nickname.trim()}
-          className="mt-auto rounded-full bg-ink py-4 text-base font-medium text-paper transition hover:bg-ink-soft disabled:bg-ink-mute"
-        >
-          {submitting ? '登録中...' : '次へ'}
-        </button>
+        <div className="mt-auto space-y-3">
+          <button
+            type="submit"
+            disabled={submitting || !nickname.trim()}
+            className="w-full rounded-full bg-ink py-4 text-base font-medium tracking-wider text-paper shadow-sm transition hover:bg-ink-soft hover:shadow-md disabled:bg-ink-mute"
+          >
+            {submitting ? '登録中...' : '次へ'}
+          </button>
+          <p className="text-center text-[10px] tracking-widest text-ink-mute">
+            この情報は段階開示されます。一度に見せません。
+          </p>
+        </div>
       </form>
     </main>
   );

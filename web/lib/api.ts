@@ -2,6 +2,13 @@ import { getUserId } from './session';
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8787';
 
+export class ApiError extends Error {
+  constructor(public status: number, public body: string) {
+    super(`API ${status}: ${body}`);
+    this.name = 'ApiError';
+  }
+}
+
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
@@ -24,7 +31,7 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`API ${res.status}: ${text}`);
+    throw new ApiError(res.status, text);
   }
   return res.json() as Promise<T>;
 }
