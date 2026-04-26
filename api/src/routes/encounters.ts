@@ -80,9 +80,10 @@ encounters.post('/', requireUser, async (c) => {
       const existing = await client.query<{
         id: string;
         count: number;
-        last_counted_date: string;
+        is_past: boolean;
       }>(
-        `SELECT id, count, last_counted_date FROM encounters
+        `SELECT id, count, (last_counted_date < CURRENT_DATE) AS is_past
+         FROM encounters
          WHERE user_a_id = $1 AND user_b_id = $2
          FOR UPDATE`,
         [a, b],
@@ -104,13 +105,9 @@ encounters.post('/', requireUser, async (c) => {
       } else {
         const row = existing.rows[0]!;
         encounterId = row.id;
-        const today = new Date().toISOString().slice(0, 10);
-        const lastDate =
-          typeof row.last_counted_date === 'string'
-            ? row.last_counted_date.slice(0, 10)
-            : new Date(row.last_counted_date).toISOString().slice(0, 10);
 
-        if (lastDate === today) {
+        if (!row.is_past) {
+          // 同日内 → カウント据え置き（同日丸め）
           newCount = row.count;
         } else {
           newCount = row.count + 1;
