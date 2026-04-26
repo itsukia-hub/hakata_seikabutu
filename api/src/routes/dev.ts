@@ -14,13 +14,13 @@ interface SampleConfig {
 
 // 各サンプル相手と新規ユーザーの間に生成するすれ違い状態
 const SAMPLE_CONFIGS: SampleConfig[] = [
-  { nickname: 'Carol', daysAgo: 0, hoursAgo: 2, count: 5, agreement: 'mutual' },
-  { nickname: 'Bob', daysAgo: 1, count: 3 },
-  { nickname: 'Emma', daysAgo: 2, count: 1 },
-  { nickname: 'David', daysAgo: 3, count: 2 },
-  { nickname: 'Fiona', daysAgo: 5, count: 4, agreement: 'expired' },
-  { nickname: 'Harry', daysAgo: 12, count: 3 },
-  { nickname: 'Ivy', daysAgo: 28, count: 1 },
+  { nickname: 'なな', daysAgo: 0, hoursAgo: 2, count: 5, agreement: 'mutual' },
+  { nickname: 'はる', daysAgo: 1, count: 3 },
+  { nickname: 'みな', daysAgo: 2, count: 1 },
+  { nickname: 'たか', daysAgo: 3, count: 2 },
+  { nickname: 'りん', daysAgo: 5, count: 4, agreement: 'expired' },
+  { nickname: 'けん', daysAgo: 12, count: 3 },
+  { nickname: 'あや', daysAgo: 28, count: 1 },
 ];
 
 dev.post('/seed-encounters', requireUser, async (c) => {
