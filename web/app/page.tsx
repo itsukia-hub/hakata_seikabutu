@@ -48,21 +48,21 @@ export default function HomePage() {
 
         <div className="space-y-4">
           <h1 className="animate-fade-up animate-fade-up-delay-1 text-3xl font-medium leading-relaxed tracking-tight text-ink">
-            同じ場所で、
+            風景の一部だった
             <br />
-            何度か会っている。
+            誰かと、
           </h1>
-          <p className="animate-fade-up animate-fade-up-delay-2 text-base leading-relaxed text-ink-soft">
-            双方が望んだときだけ、
+          <p className="animate-fade-up animate-fade-up-delay-2 text-lg leading-relaxed text-ink-soft">
+            静かに。
             <br />
-            一歩前に進める。
+            名前を、呼び合うまで。
           </p>
         </div>
 
         <p className="animate-fade-up animate-fade-up-delay-3 border-l-2 border-accent/60 pl-4 text-sm leading-relaxed tracking-wider text-ink-mute">
-          合意がなければ、
+          「いつもの街」を、
           <br />
-          何も起きない。
+          二人の「はじまりの場所」へ。
         </p>
       </div>
 
