@@ -30,7 +30,7 @@ export default function EncountersPage() {
   const [loading, setLoading] = useState(true);
 
   const handleApiError = useCallback(
-    (err: unknown) => {
+    (err: unknown): boolean => {
       if (err instanceof ApiError && (err.status === 401 || err.status === 404)) {
         clearUserId();
         router.replace('/');
@@ -55,16 +55,36 @@ export default function EncountersPage() {
       router.replace('/');
       return;
     }
-    Promise.all([
-      getMe().then(setMe).catch(handleApiError),
-      refresh(),
-    ]).finally(() => setLoading(false));
 
-    const unsubscribe = subscribeAgreementStream({
-      onAgreementUpdated: () => refresh(),
-      onEncounterUpdated: () => refresh(),
-    });
-    return () => unsubscribe();
+    let cancelled = false;
+    let unsubscribe: (() => void) | null = null;
+
+    (async () => {
+      try {
+        const meData = await getMe();
+        if (cancelled) return;
+        setMe(meData);
+        await refresh();
+        if (cancelled) return;
+
+        unsubscribe = subscribeAgreementStream({
+          onAgreementUpdated: () => refresh(),
+          onEncounterUpdated: () => refresh(),
+        });
+      } catch (err) {
+        if (cancelled) return;
+        if (!handleApiError(err)) {
+          setError((err as Error).message);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [router, refresh, handleApiError]);
 
   function reset() {
