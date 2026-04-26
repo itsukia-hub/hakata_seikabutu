@@ -78,6 +78,14 @@ export function recoverByCode(recoveryCode: string) {
   });
 }
 
+// 開発モード専用: サンプル相手とのすれ違い履歴を自分のアカウントに付与
+export function seedDevEncounters() {
+  return apiFetch<{ ok: true; generated: string[]; skipped: string[] }>(
+    '/api/dev/seed-encounters',
+    { method: 'POST', body: {} },
+  );
+}
+
 export function setHome(lat: number, lng: number) {
   return apiFetch<{ ok: true }>('/api/users/me/home', {
     method: 'PATCH',

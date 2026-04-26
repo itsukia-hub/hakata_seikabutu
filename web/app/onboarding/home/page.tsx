@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { setHome } from '@/lib/api';
+import { seedDevEncounters, setHome } from '@/lib/api';
+
+const IS_DEV = process.env.NODE_ENV !== 'production';
 
 const FUKUOKA_DEFAULT = { lat: 33.5904, lng: 130.4017 };
 const PROTECT_RADIUS_M = 500;
@@ -129,6 +131,12 @@ export default function HomeRegistrationPage() {
     setError(null);
     try {
       await setHome(coords.lat, coords.lng);
+      if (IS_DEV) {
+        // 開発モード: サンプル相手とのすれ違い履歴を自動生成
+        await seedDevEncounters().catch(() => {
+          // 失敗しても画面遷移は止めない
+        });
+      }
       router.push('/encounters');
     } catch (err) {
       setError((err as Error).message);
@@ -136,7 +144,10 @@ export default function HomeRegistrationPage() {
     }
   }
 
-  function skip() {
+  async function skip() {
+    if (IS_DEV) {
+      await seedDevEncounters().catch(() => {});
+    }
     router.push('/encounters');
   }
 

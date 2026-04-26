@@ -8,6 +8,7 @@ import { encounters } from './routes/encounters.js';
 import { agreements } from './routes/agreements.js';
 import { silentRejects } from './routes/silent-rejects.js';
 import { auth } from './routes/auth.js';
+import { dev } from './routes/dev.js';
 
 const app = new Hono();
 
@@ -28,6 +29,11 @@ app.route('/api/encounters', encounters);
 app.route('/api/agreements', agreements);
 app.route('/api/silent-rejects', silentRejects);
 app.route('/api/auth', auth);
+
+// 開発モードのみ有効（本番では NODE_ENV チェックで 403）
+if (process.env.NODE_ENV !== 'production') {
+  app.route('/api/dev', dev);
+}
 
 app.onError((err, c) => {
   console.error('[api] error:', err);
