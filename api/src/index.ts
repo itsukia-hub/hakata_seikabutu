@@ -37,6 +37,21 @@ app.onError((err, c) => {
 
 const port = Number(process.env.PORT ?? 8787);
 
-serve({ fetch: app.fetch, port }, (info) => {
+const server = serve({ fetch: app.fetch, port }, (info) => {
   console.log(`[api] listening on http://localhost:${info.port}`);
 });
+
+const shutdown = (signal: string) => {
+  console.log(`[api] received ${signal}, closing...`);
+  server.close((err) => {
+    if (err) {
+      console.error('[api] close error:', err);
+      process.exit(1);
+    }
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(0), 3000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

@@ -8,3 +8,9 @@ build/
 .DS_Store
 tsconfig.tsbuildinfo
 **/tsconfig.tsbuildinfo
+
+# 開発者ローカル用ファイル (*.local.* パターン) — git 管理対象外
+*.local.sh
+*.local.sql
+*.local.ts
+*.local.json
