@@ -2,7 +2,13 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { pool, query } from '../lib/db.js';
 import { requireUser } from '../lib/auth.js';
-import { calcStage, filterByStage, type UserPublic } from '../lib/stage.js';
+import {
+  calcStage,
+  filterByStage,
+  evalSubmarineLevel,
+  submarineImageUrl,
+  type UserPublic,
+} from '../lib/stage.js';
 import { distanceMeters, HOME_PROTECT_RADIUS_M } from '../lib/geo.js';
 import { sseHub } from '../lib/sse.js';
 
@@ -203,11 +209,16 @@ encounters.get('/', requireUser, async (c) => {
     };
     const myAgreedAt = r.is_user_a ? r.user_a_agreed_at : r.user_b_agreed_at;
     const partnerAgreedAt = r.is_user_a ? r.user_b_agreed_at : r.user_a_agreed_at;
+    const submarineLevel = evalSubmarineLevel(r.count);
     return {
       encounterId: r.encounter_id,
       count: r.count,
       lastEncounteredAt: r.last_encountered_at,
       partner: filterByStage(stage, partner),
+      submarine: {
+        level: submarineLevel,
+        imageUrl: submarineImageUrl(submarineLevel),
+      },
       agreement: {
         myAgreedAt,
         partnerAgreedAt,

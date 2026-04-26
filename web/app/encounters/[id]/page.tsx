@@ -17,6 +17,7 @@ import {
   CHRONOTYPE_LABEL,
   RELATIONSHIP_LABEL,
 } from '@/lib/labels';
+import SubmarineBadge from '@/components/SubmarineBadge';
 
 export default function EncounterDetailPage() {
   const params = useParams<{ id: string }>();
@@ -132,18 +133,26 @@ export default function EncounterDetailPage() {
         ← 一覧に戻る
       </Link>
 
-      <section className="mb-8">
-        <p className="text-xs tracking-widest text-ink-mute">
-          {encounter.count} TIMES PASSED
-        </p>
-        <div className="mt-3 flex items-baseline gap-3">
-          <h1 className="text-3xl font-medium text-ink transition-all duration-1000">
-            {encounter.partner.nickname ??
-              (encounter.partner.nicknameInitial
-                ? `${encounter.partner.nicknameInitial}…`
-                : 'まだ知らない人')}
-          </h1>
-          <span className="text-xs text-ink-mute">{stage}</span>
+      <section className="mb-8 flex items-center gap-5">
+        <SubmarineBadge
+          level={encounter.submarine.level}
+          imageUrl={encounter.submarine.imageUrl}
+          size={96}
+          showLabel
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs tracking-widest text-ink-mute">
+            {encounter.count} TIMES PASSED
+          </p>
+          <div className="mt-3 flex items-baseline gap-3">
+            <h1 className="truncate text-3xl font-medium text-ink transition-all duration-1000">
+              {encounter.partner.nickname ??
+                (encounter.partner.nicknameInitial
+                  ? `${encounter.partner.nicknameInitial}…`
+                  : 'まだ知らない人')}
+            </h1>
+            <span className="text-xs text-ink-mute">{stage}</span>
+          </div>
         </div>
       </section>
 

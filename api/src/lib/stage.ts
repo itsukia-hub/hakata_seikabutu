@@ -12,6 +12,20 @@ export function calcStage({ count, unlocked }: StageInput): Stage {
   return 'Lv0';
 }
 
+export type SubmarineLevel = 1 | 2 | 3 | 4 | 5;
+
+export function evalSubmarineLevel(count: number): SubmarineLevel {
+  if (count >= 5) return 5;
+  if (count >= 4) return 4;
+  if (count >= 3) return 3;
+  if (count >= 2) return 2;
+  return 1;
+}
+
+export function submarineImageUrl(level: SubmarineLevel): string {
+  return `/submarine/level${level}.png`;
+}
+
 export interface ProfileExtras {
   ageRange?: string;
   relationshipIntent?: string;

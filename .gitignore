@@ -14,3 +14,6 @@ tsconfig.tsbuildinfo
 *.local.sql
 *.local.ts
 *.local.json
+
+# 元アセットのバックアップ置き場（配信用は web/public/ にコピー済み）
+image/

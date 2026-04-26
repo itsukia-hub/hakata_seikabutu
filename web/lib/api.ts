@@ -129,11 +129,19 @@ export interface AgreementState {
   expiredAt: string | null;
 }
 
+export type SubmarineLevel = 1 | 2 | 3 | 4 | 5;
+
+export interface SubmarineState {
+  level: SubmarineLevel;
+  imageUrl: string;
+}
+
 export interface EncounterCard {
   encounterId: string;
   count: number;
   lastEncounteredAt: string;
   partner: PartnerCard;
+  submarine: SubmarineState;
   agreement: AgreementState;
 }
 

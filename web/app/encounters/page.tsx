@@ -8,6 +8,7 @@ import { subscribeAgreementStream } from '@/lib/sse';
 import { clearUserId, getUserId } from '@/lib/session';
 import { formatRelative } from '@/lib/relative-time';
 import StageGlyph from '@/components/StageGlyph';
+import SubmarineBadge from '@/components/SubmarineBadge';
 
 const STAGE_LABEL: Record<string, string> = {
   Lv0: 'すれ違いました',
@@ -173,7 +174,11 @@ export default function EncountersPage() {
                   }`}
                 >
                   <div className="flex items-start gap-4">
-                    <StageGlyph stage={e.partner.stage} size={36} />
+                    <SubmarineBadge
+                      level={e.submarine.level}
+                      imageUrl={e.submarine.imageUrl}
+                      size={56}
+                    />
                     <div className="min-w-0 flex-1">
                       <p
                         className={`text-[10px] tracking-widest ${STAGE_TONE[e.partner.stage]}`}
