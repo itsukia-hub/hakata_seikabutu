@@ -139,7 +139,9 @@ export default function EncounterDetailPage() {
         <div className="mt-3 flex items-baseline gap-3">
           <h1 className="text-3xl font-medium text-ink transition-all duration-1000">
             {encounter.partner.nickname ??
-              (encounter.partner.nicknameInitial ? `${encounter.partner.nicknameInitial}…` : '？')}
+              (encounter.partner.nicknameInitial
+                ? `${encounter.partner.nicknameInitial}…`
+                : 'まだ知らない人')}
           </h1>
           <span className="text-xs text-ink-mute">{stage}</span>
         </div>

@@ -166,7 +166,7 @@ export default function EncountersPage() {
               <li key={e.encounterId} className="animate-fade-up">
                 <Link
                   href={`/encounters/${e.encounterId}`}
-                  className={`block rounded-xl border bg-paper-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
+                  className={`flex min-h-[148px] flex-col rounded-xl border bg-paper-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${
                     unlocked
                       ? 'border-accent/40'
                       : 'border-ink-mute/15 hover:border-accent/40'
@@ -184,13 +184,11 @@ export default function EncountersPage() {
                         {e.partner.nickname ??
                           (e.partner.nicknameInitial
                             ? `${e.partner.nicknameInitial}…`
-                            : '？')}
+                            : 'まだ知らない人')}
                       </p>
-                      {e.partner.profileSummary && (
-                        <p className="mt-2 line-clamp-2 text-sm text-ink-soft">
-                          {e.partner.profileSummary}
-                        </p>
-                      )}
+                      <p className="mt-2 line-clamp-2 min-h-[2.5rem] text-sm text-ink-soft">
+                        {e.partner.profileSummary ?? ' '}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-light leading-none text-ink">
@@ -205,26 +203,26 @@ export default function EncountersPage() {
                     </div>
                   </div>
 
-                  {/* 状態バッジ */}
-                  {(unlocked || myAgreed || expired) && (
-                    <div className="mt-3 border-t border-ink-mute/10 pt-2">
-                      {unlocked ? (
-                        <p className="flex items-center gap-2 text-xs text-accent">
-                          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                          双方合意 · 詳細を見る
-                        </p>
-                      ) : myAgreed && !expired ? (
-                        <p className="flex items-center gap-2 text-xs text-ink-soft">
-                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
-                          相手の応答を待っています
-                        </p>
-                      ) : expired ? (
-                        <p className="text-xs text-ink-mute">
-                          合意の窓は閉じました
-                        </p>
-                      ) : null}
-                    </div>
-                  )}
+                  {/* 状態バッジ（高さを揃えるため常に存在、内容は条件分岐） */}
+                  <div className="mt-auto border-t border-ink-mute/10 pt-2">
+                    {unlocked ? (
+                      <p className="flex items-center gap-2 text-xs text-accent">
+                        <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                        双方合意 · 詳細を見る
+                      </p>
+                    ) : myAgreed && !expired ? (
+                      <p className="flex items-center gap-2 text-xs text-ink-soft">
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+                        相手の応答を待っています
+                      </p>
+                    ) : expired ? (
+                      <p className="text-xs text-ink-mute">
+                        合意の窓は閉じました
+                      </p>
+                    ) : (
+                      <p className="text-xs text-ink-mute/50">&nbsp;</p>
+                    )}
+                  </div>
                 </Link>
               </li>
             );
