@@ -78,7 +78,9 @@ export default function OnboardingPage() {
           : undefined,
       });
       setUserId(user.id);
-      router.push('/onboarding/home');
+      // 復元コードはオンボーディング完了画面まで一時保存
+      sessionStorage.setItem('meguriai.recoveryCode', user.recovery_code);
+      router.push('/onboarding/recovery');
     } catch (err) {
       setError((err as Error).message);
       setSubmitting(false);

@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { query } from '../lib/db.js';
@@ -29,16 +30,23 @@ const createSchema = z.object({
 
 users.post('/', async (c) => {
   const body = createSchema.parse(await c.req.json());
-  const rows = await query<{ id: string; nickname: string; created_at: string }>(
-    `INSERT INTO users (nickname, icon_url, profile_summary, profile_detail, profile_extras)
-     VALUES ($1, $2, $3, $4, $5::jsonb)
-     RETURNING id, nickname, created_at`,
+  const recoveryCode = crypto.randomBytes(8).toString('hex'); // 16文字 hex
+  const rows = await query<{
+    id: string;
+    nickname: string;
+    created_at: string;
+    recovery_code: string;
+  }>(
+    `INSERT INTO users (nickname, icon_url, profile_summary, profile_detail, profile_extras, recovery_code)
+     VALUES ($1, $2, $3, $4, $5::jsonb, $6)
+     RETURNING id, nickname, created_at, recovery_code`,
     [
       body.nickname,
       body.iconUrl ?? null,
       body.profileSummary ?? null,
       body.profileDetail ?? null,
       JSON.stringify(body.profileExtras ?? {}),
+      recoveryCode,
     ],
   );
   return c.json(rows[0], 201);
@@ -55,8 +63,9 @@ users.get('/me', requireUser, async (c) => {
     home_lat: string | null;
     home_lng: string | null;
     profile_extras: unknown;
+    recovery_code: string;
   }>(
-    `SELECT id, nickname, icon_url, profile_summary, profile_detail, home_lat, home_lng, profile_extras
+    `SELECT id, nickname, icon_url, profile_summary, profile_detail, home_lat, home_lng, profile_extras, recovery_code
      FROM users WHERE id = $1`,
     [userId],
   );

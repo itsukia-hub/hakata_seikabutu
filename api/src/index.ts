@@ -7,6 +7,7 @@ import { users } from './routes/users.js';
 import { encounters } from './routes/encounters.js';
 import { agreements } from './routes/agreements.js';
 import { silentRejects } from './routes/silent-rejects.js';
+import { auth } from './routes/auth.js';
 
 const app = new Hono();
 
@@ -26,6 +27,7 @@ app.route('/api/users', users);
 app.route('/api/encounters', encounters);
 app.route('/api/agreements', agreements);
 app.route('/api/silent-rejects', silentRejects);
+app.route('/api/auth', auth);
 
 app.onError((err, c) => {
   console.error('[api] error:', err);

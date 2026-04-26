@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getUserId } from '@/lib/session';
 
 export default function HomePage() {
@@ -66,7 +67,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="mt-12 space-y-4 animate-fade-up animate-fade-up-delay-4">
+      <div className="mt-12 space-y-3 animate-fade-up animate-fade-up-delay-4">
         <button
           type="button"
           onClick={() => router.push('/onboarding')}
@@ -74,6 +75,12 @@ export default function HomePage() {
         >
           はじめる
         </button>
+        <Link
+          href="/recover"
+          className="block text-center text-xs text-ink-mute transition hover:text-ink-soft"
+        >
+          すでに復元コードがある →
+        </Link>
         <p className="text-center text-[10px] tracking-widest text-ink-mute">
           観察非対称を作らない。場所も時刻も、表示しない。
         </p>

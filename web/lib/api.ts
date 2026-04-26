@@ -58,9 +58,22 @@ export interface CreateUserInput {
 }
 
 export function createUser(input: CreateUserInput) {
-  return apiFetch<{ id: string; nickname: string; created_at: string }>('/api/users', {
+  return apiFetch<{
+    id: string;
+    nickname: string;
+    created_at: string;
+    recovery_code: string;
+  }>('/api/users', {
     method: 'POST',
     body: input,
+    authed: false,
+  });
+}
+
+export function recoverByCode(recoveryCode: string) {
+  return apiFetch<{ id: string; nickname: string }>('/api/auth/recover', {
+    method: 'POST',
+    body: { recoveryCode },
     authed: false,
   });
 }
@@ -80,6 +93,7 @@ export interface MeResponse {
   profile_detail: string | null;
   home_lat: string | null;
   home_lng: string | null;
+  recovery_code: string;
 }
 
 export function getMe() {
